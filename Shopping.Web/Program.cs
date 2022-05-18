@@ -14,6 +14,9 @@ builder.Services.AddDbContext<DataContext>(o =>
 });
 builder.Services.AddScoped<ICombosHelper, CombosHelper>();
 builder.Services.AddScoped<ICountryRepository, CountryRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<ICityRepository, CityRepository>();
+builder.Services.AddScoped<IStateRepository, StateRepository>();
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 var app = builder.Build();
 
