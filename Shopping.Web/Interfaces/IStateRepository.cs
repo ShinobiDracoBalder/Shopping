@@ -6,5 +6,6 @@ namespace Shopping.Web.Interfaces
     {
         public Task<State> GetOnlyStateAsync(int id);
         public Task<bool> GetAnyStateAsync(int id);
+        public Task<State> GetAnyDetailsStateAsync(int id); 
     }
 }

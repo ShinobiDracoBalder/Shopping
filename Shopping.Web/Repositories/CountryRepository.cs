@@ -19,6 +19,14 @@ namespace Shopping.Web.Repositories
            return  await  _dataContext.Countries.AnyAsync(e => e.Id == id);
         }
 
+        public async Task<Country> GetAnyDetailsCountryAsync(int id)
+        {
+            return await _dataContext.Countries
+                .Include(c => c.States)
+                 .ThenInclude(s => s.Cities)
+                .FirstOrDefaultAsync(c => c.Id == id); ;
+        }
+
         public async Task<Country> GetOnlyCountryAsync(int id)
         {
            return await _dataContext.Countries.FirstOrDefaultAsync(c => c.Id.Equals(id));

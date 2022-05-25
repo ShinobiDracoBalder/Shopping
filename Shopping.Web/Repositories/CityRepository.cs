@@ -19,6 +19,13 @@ namespace Shopping.Web.Repositories
             return await _dataContext.Cities.AnyAsync(c=>c.Id==id);
         }
 
+        public async Task<City> GetAnyDetailsCityAsync(int id)
+        {
+            return await _dataContext.Cities
+                .Include(c => c.State)
+                .FirstOrDefaultAsync(c => c.Id == id);
+        }
+
         public async Task<City> GetOnlyCityAsync(int id)
         {
             return await _dataContext.Cities.FirstOrDefaultAsync(c => c.Id==id);

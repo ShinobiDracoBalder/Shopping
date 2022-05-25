@@ -14,6 +14,14 @@ namespace Shopping.Web.Repositories
             _dataContext = dataContext;
         }
 
+        public async Task<State> GetAnyDetailsStateAsync(int id)
+        {
+            return await _dataContext.States
+               .Include(s => s.Country)
+               .Include(s => s.Cities)
+               .FirstOrDefaultAsync(m => m.Id == id);
+        }
+
         public async Task<bool> GetAnyStateAsync(int id)
         {
             return await _dataContext.States.AnyAsync(s => s.Id == id);

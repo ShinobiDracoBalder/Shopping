@@ -6,6 +6,7 @@ namespace Shopping.Web.Interfaces
     {
         public Task<Country> GetOnlyCountryAsync(int id);
         public Task<bool> GetAnyCountryAsync(int id);
+        public Task<Country> GetAnyDetailsCountryAsync(int id);
     }
 }
 

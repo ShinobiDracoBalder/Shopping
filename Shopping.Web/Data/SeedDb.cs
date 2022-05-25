@@ -13,8 +13,8 @@ namespace Shopping.Web.Data
         public async Task SeedAsync()
         {
             await _dataContext.Database.EnsureCreatedAsync();
-            //await CheckCategoriesAsync();
-            //await CheckCountriesAsync();
+            await CheckCategoriesAsync();
+            await CheckCountriesAsync();
             //await CheckRolesAsync();
             //await CheckUserAsync("1010", "Juan", "Zuluaga", "zulu@yopmail.com", "322 311 4620", "Calle Luna Calle Sol", "JuanZuluaga.jpeg", UserType.Admin);
             //await CheckUserAsync("2020", "Ledys", "Bedoya", "ledys@yopmail.com", "322 311 4620", "Calle Luna Calle Sol", "LedysBedoya.jpeg", UserType.User);
