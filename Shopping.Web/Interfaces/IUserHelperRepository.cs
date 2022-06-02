@@ -8,6 +8,8 @@ namespace Shopping.Web.Interfaces
     {
         Task<User> GetUserAsync(string email);
 
+        Task<List<User>> GetUserAllAsync();
+
         Task<User> GetUserAsync(Guid userId);
 
         Task<IdentityResult> AddUserAsync(User user, string password);

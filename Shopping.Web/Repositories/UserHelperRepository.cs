@@ -37,6 +37,7 @@ namespace Shopping.Web.Repositories
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 ImageId = model.ImageId,
+                PicturePath = model.PicturePath,    
                 PhoneNumber = model.PhoneNumber,
                 City = await _dataContext.Cities.FindAsync(model.CityId),
                 UserName = model.Username,
@@ -132,6 +133,15 @@ namespace Shopping.Web.Repositories
         public async Task<IdentityResult> ResetPasswordAsync(User user, string token, string password)
         {
             return await _userManager.ResetPasswordAsync(user, token, password);
+        }
+
+        public async Task<List<User>> GetUserAllAsync()
+        {
+            return await _dataContext.Users
+                .Include(u => u.City)
+                .ThenInclude(c => c.State)
+                .ThenInclude(s => s.Country)
+                .ToListAsync();
         }
     }
 }
