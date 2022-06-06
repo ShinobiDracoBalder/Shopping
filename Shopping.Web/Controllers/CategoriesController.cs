@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shopping.Web.Data.Entities;
 using Shopping.Web.Interfaces;
 
 namespace Shopping.Web.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class CategoriesController: Controller
     {
         private readonly ICategoryRepository _categoryRepository;

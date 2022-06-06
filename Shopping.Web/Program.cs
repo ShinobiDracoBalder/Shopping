@@ -38,6 +38,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Account/NotAuthorized";
     options.AccessDeniedPath = "/Account/NotAuthorized";
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
 });
 
 
