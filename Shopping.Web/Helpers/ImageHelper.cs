@@ -16,7 +16,7 @@
             string file = $"{guid}.png";
             string path = Path.Combine(
                 Directory.GetCurrentDirectory(),
-                $"wwwroot\\image\\{folder}",
+                $"wwwroot\\images\\{folder}",
                 file);
 
             using (FileStream stream = new FileStream(path, FileMode.Create))
@@ -24,7 +24,7 @@
                 await imageFile.CopyToAsync(stream);
             }
 
-            return $"~/image/{folder}/{file}";
+            return $"~/images/{folder}/{file}";
         }
 
         public string UploadImage(byte[] pictureArray, string folder)

@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shooping.Common.Enums;
+using Shooping.Common.Responses;
 using Shopping.Web.Data;
 using Shopping.Web.Data.Entities;
 using Shopping.Web.Helpers;
@@ -9,18 +11,26 @@ using Shopping.Web.Models;
 
 namespace Shopping.Web.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class UsersController : Controller
     {
         private readonly IUserHelperRepository _userHelperRepository;
         private readonly ICombosHelper _combosHelper;
         private readonly DataContext _dataContext;
+        private readonly IBlobHelper _blobHelper;
+        private readonly IMailHelper _mailHelper;
+        private readonly IImageHelper _imageHelper;
 
         public UsersController(IUserHelperRepository userHelperRepository
-            , ICombosHelper combosHelper,DataContext dataContext)
+            , ICombosHelper combosHelper,DataContext dataContext, IBlobHelper blobHelper
+            , IMailHelper mailHelper,IImageHelper imageHelper)
         {
             _userHelperRepository = userHelperRepository;
             _combosHelper = combosHelper;
             _dataContext = dataContext;
+            _blobHelper = blobHelper;
+            _mailHelper = mailHelper;
+            _imageHelper = imageHelper;
         }
         public async Task<IActionResult> Index()
         {
@@ -46,13 +56,16 @@ namespace Shopping.Web.Controllers
             if (ModelState.IsValid)
             {
                 Guid imageId = Guid.Empty;
+                string path = string.Empty;
 
                 if (model.ImageFile != null)
                 {
-                    //imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "users");
+                    imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "users");
+                    path = await _imageHelper.UploadImageAsync(model.ImageFile, "users");
                 }
 
                 model.ImageId = imageId;
+                model.PicturePath = path;
                 User user = await _userHelperRepository.AddUserAsync(model);
                 if (user == null)
                 {
@@ -63,7 +76,26 @@ namespace Shopping.Web.Controllers
                     return View(model);
                 }
 
-                return RedirectToAction("Index", "Home");
+                string myToken = await _userHelperRepository.GenerateEmailConfirmationTokenAsync(user);
+                string tokenLink = Url.Action("ConfirmEmail", "Account", new
+                {
+                    userid = user.Id,
+                    token = myToken
+                }, protocol: HttpContext.Request.Scheme);
+
+                Response response = _mailHelper.SendMail(
+                    $"{model.FirstName} {model.LastName}",
+                    model.Username,
+                    "Shopping - Confirmación de Email",
+                    $"<h1>Shopping - Confirmación de Email</h1>" +
+                        $"Para habilitar el usuario por favor hacer click en el siguiente link:, " +
+                        $"<hr/><br/><p><a href = \"{tokenLink}\">Confirmar Email</a></p>");
+                if (response.IsSuccess)
+                {
+                    ViewBag.Message = "Las instrucciones para habilitar el administrador han sido enviadas al correo.";
+                    return View(model);
+                }
+                ModelState.AddModelError(string.Empty, response.Message);
             }
 
             model.Countries = await _combosHelper.GetComboCountriesAsync();

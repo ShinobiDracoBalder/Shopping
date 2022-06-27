@@ -38,13 +38,13 @@ namespace Shopping.Web.Data.Entities
 
         [Display(Name = "Foto")]
         public string ImageFullPath => ImageId == Guid.Empty
-            ? $"https://localhost:7057/images/noimage.png"
+            ? $"https://localhost:7144/images/noimage.png"
             : $"https://shoppingzulu.blob.core.windows.net/users/{ImageId}";
 
         [Display(Name = "Picture")]
         public string PictureFullPath => PicturePath == string.Empty
-           ? $"https://localhost:7057/images/noimage.png"
-           : $"https://localhost:7057/users/{PicturePath}";
+           ? $"https://localhost:7144/images/noimage.png"
+           : $"https://localhost:7144/users/{PicturePath}";
 
         
        

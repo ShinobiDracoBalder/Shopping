@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Shopping.Web.Data;
@@ -51,7 +52,18 @@ builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICityRepository, CityRepository>();
 builder.Services.AddScoped<IStateRepository, StateRepository>();
 builder.Services.AddScoped<IImageHelper, ImageHelper>();
+builder.Services.AddScoped<IBlobHelper, BlobHelper>();
+builder.Services.AddScoped<IMailHelper, MailHelper>();
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
+
+// Set the JSON serializer options
+builder.Services.Configure<JsonOptions>(options =>
+{
+    options.SerializerOptions.PropertyNameCaseInsensitive = false;
+    options.SerializerOptions.PropertyNamingPolicy = null;
+    options.SerializerOptions.WriteIndented = true;
+});
+
 var app = builder.Build();
 SeedData();
 void SeedData()

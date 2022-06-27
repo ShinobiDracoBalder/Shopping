@@ -10,12 +10,14 @@ namespace Shopping.Web.Data
         private readonly DataContext _dataContext;
         private readonly IUserHelperRepository _userHelperRepository;
         private readonly IImageHelper _imageHelper;
+        private readonly IBlobHelper _blobHelper;
 
-        public SeedDb(DataContext dataContext, IUserHelperRepository userHelperRepository, IImageHelper imageHelper)
+        public SeedDb(DataContext dataContext, IUserHelperRepository userHelperRepository, IImageHelper imageHelper, IBlobHelper blobHelper)
         {
             _dataContext = dataContext;
             _userHelperRepository = userHelperRepository;
             _imageHelper = imageHelper;
+            _blobHelper = blobHelper;
         }
         public async Task SeedAsync()
         {
@@ -190,8 +192,8 @@ namespace Shopping.Web.Data
             User user = await _userHelperRepository.GetUserAsync(email);
             if (user == null)
             {
-                string imageId = $"~/images/users/{image}";
-                // Guid imageId = await _blobHelper.UploadBlobAsync($"{Environment.CurrentDirectory}\\wwwroot\\images\\users\\{image}", "users");
+                string imagesId = $"~/images/users/{image}";
+                Guid imageId = await _blobHelper.UploadBlobAsync($"{Environment.CurrentDirectory}\\wwwroot\\images\\users\\{image}", "users");
                 user = new User
                 {
                     FirstName = firstName,
@@ -203,7 +205,8 @@ namespace Shopping.Web.Data
                     Document = document,
                     City = _dataContext.Cities.FirstOrDefault(),
                     UserType = userType,
-                    PicturePath = imageId
+                    PicturePath = imagesId,
+                    ImageId = imageId,
                 };
 
                 await _userHelperRepository.AddUserAsync(user, "123456");
