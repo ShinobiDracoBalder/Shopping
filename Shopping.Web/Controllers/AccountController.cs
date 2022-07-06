@@ -153,6 +153,7 @@ namespace Shopping.Web.Controllers
                 if (response.IsSuccess)
                 {
                     _flashMessage.Info("Usuario registrado. Para poder ingresar al sistema, siga las instrucciones que han sido enviadas a su correo.");
+                    ViewBag.Message = "Las instrucciones para habilitar el administrador han sido enviadas al correo.";
                     return RedirectToAction(nameof(Login));
                 }
 
