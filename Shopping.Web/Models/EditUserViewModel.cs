@@ -43,10 +43,15 @@ namespace Shopping.Web.Models
             ? $"https://localhost:7057/images/noimage.png"
             : $"https://shoppingzulu.blob.core.windows.net/users/{ImageId}";
 
+        //[Display(Name = "Picture")]
+        //public string PictureFullPath => PicturePath == string.Empty
+        //  ? $"https://localhost:7057/images/noimage.png"
+        //  : $"https://localhost:7057/users/{PicturePath}";
+
         [Display(Name = "Picture")]
         public string PictureFullPath => PicturePath == string.Empty
-          ? $"https://localhost:7057/images/noimage.png"
-          : $"https://localhost:7057/users/{PicturePath}";
+          ? $"https://localhost:7144/images/noimage.png"
+          : string.Format("https://localhost:7144/{0}", PicturePath.Substring(1));
 
 
         [Display(Name = "Image")]

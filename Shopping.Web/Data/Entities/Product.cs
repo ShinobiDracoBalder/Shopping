@@ -29,5 +29,14 @@ namespace Shopping.Web.Data.Entities
         public ICollection<ProductImage> ProductImages { get; set; }
         [Display(Name = "Fotos")]
         public int ImagesNumber => ProductImages == null ? 0 : ProductImages.Count;
+
+        [Display(Name = "Foto")]
+        public string ImageFullPath => ProductImages == null || ProductImages.Count == 0
+           ? $"https://zulushooping.azurewebsites.net/images/noimage.png"
+           : ProductImages.FirstOrDefault().ImageFullPath;
+        [Display(Name = "Foto")]
+        public string PictureFullPath => ProductImages == null || ProductImages.Count == 0
+           ? $"https://zulushooping.azurewebsites.net/images/noimage.png"
+           : ProductImages.FirstOrDefault().PictureFullPath;
     }
 }

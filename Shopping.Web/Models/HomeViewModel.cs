@@ -1,10 +1,11 @@
-﻿using Shopping.Web.Data.Entities;
+﻿using Shooping.Common.Objects;
+using Shopping.Web.Data.Entities;
 
 namespace Shopping.Web.Models
 {
     public class HomeViewModel
     {
-        //public PaginatedList<Product> Products { get; set; }
+       public PaginatedList<Product> Products { get; set; }
 
         public ICollection<Category> Categories { get; set; }
 

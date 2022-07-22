@@ -227,6 +227,7 @@ namespace Shopping.Web.Controllers
                 LastName = user.LastName,
                 PhoneNumber = user.PhoneNumber,
                 ImageId = user.ImageId,
+                PicturePath = user.PicturePath,
                 Cities = await _combosHelper.GetComboCitiesAsync(user.City.State.Id),
                 CityId = user.City.Id,
                 Countries = await _combosHelper.GetComboCountriesAsync(),
