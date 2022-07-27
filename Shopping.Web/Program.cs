@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Shopping.Web.Applications.Interfaces;
+using Shopping.Web.Applications.Repositories;
 using Shopping.Web.Data;
 using Shopping.Web.Data.Entities;
 using Shopping.Web.Helpers;
@@ -11,7 +13,9 @@ using Vereyon.Web;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+    .AddRazorRuntimeCompilation();
+
 builder.Services.AddDbContext<DataContext>(o =>
 {
     o.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -55,6 +59,7 @@ builder.Services.AddScoped<IImageHelper, ImageHelper>();
 builder.Services.AddScoped<IBlobHelper, BlobHelper>();
 builder.Services.AddScoped<IMailHelper, MailHelper>();
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
+builder.Services.AddScoped<IProductoRepositorio, ProductoRepositorio>();
 
 // Set the JSON serializer options
 builder.Services.Configure<JsonOptions>(options =>

@@ -1,13 +1,18 @@
-﻿@model IEnumerable<Shopping.Web.Models.ProductsHomeViewModel>
+﻿@model Shopping.Web.Models.HomeViewModel
 @{
     ViewData["Title"] = "Index";
 }
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    Tutorial 68  C# desde cero  Parte 00:22:19 017
+    Tutorial 68  C# desde cero  Parte 00:00:00 018
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
-@foreach (var item in Model)
+@if(Model.Quantity > 0)
+{
+  <a asp-action="ShowCart" class="btn btn-outline-primary">Ver Carro de Compras (@Model.Quantity)</a>
+}
+
+@foreach (var item in Model.Products)
 {
     <div class="row">
         @if (item.Product1 != null)

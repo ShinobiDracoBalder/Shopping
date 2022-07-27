@@ -5,7 +5,8 @@ namespace Shopping.Web.Models
 {
     public class HomeViewModel
     {
-       public PaginatedList<Product> Products { get; set; }
+        //public PaginatedList<Product> Products { get; set; }
+        public ICollection<ProductsHomeViewModel> Products { get; set; }
 
         public ICollection<Category> Categories { get; set; }
 
