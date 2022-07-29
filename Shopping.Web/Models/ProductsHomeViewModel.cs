@@ -2,7 +2,7 @@
 
 namespace Shopping.Web.Models
 {
-    public class ProductsHomeViewModel
+    public class Products
     {
         public Product Product1 { get; set; }
 
