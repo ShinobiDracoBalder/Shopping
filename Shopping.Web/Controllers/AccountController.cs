@@ -292,7 +292,7 @@ namespace Shopping.Web.Controllers
                     return View(model);
                 }
 
-                User? user = await _userHelperRepository.GetUserAsync(User.Identity.Name);
+                User user = await _userHelperRepository.GetUserAsync(User.Identity.Name);
                 if (user != null)
                 {
                     IdentityResult? result = await _userHelperRepository.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);

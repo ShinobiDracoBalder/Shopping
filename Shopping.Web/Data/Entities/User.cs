@@ -46,8 +46,8 @@ namespace Shopping.Web.Data.Entities
            ? $"https://localhost:7144/images/noimage.png"
            : $"https://localhost:7144/users/{PicturePath}";
 
-        
-       
+
+        public ICollection<Sale> Sales { get; set; }
 
         [Display(Name = "Tipo de usuario")]
         public UserType UserType { get; set; }

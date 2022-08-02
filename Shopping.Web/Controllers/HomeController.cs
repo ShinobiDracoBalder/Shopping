@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Shooping.Common.Responses;
 using Shopping.Web.Data;
 using Shopping.Web.Data.Entities;
 using Shopping.Web.Interfaces;
@@ -13,12 +15,14 @@ namespace Shopping.Web.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly DataContext _dataContext;
         private readonly IUserHelperRepository _userHelperRepository;
+        private readonly IOrdersHelper _ordersHelper;
 
-        public HomeController(ILogger<HomeController> logger, DataContext dataContext, IUserHelperRepository userHelperRepository)
+        public HomeController(ILogger<HomeController> logger, DataContext dataContext, IUserHelperRepository userHelperRepository, IOrdersHelper ordersHelper)
         {
             _logger = logger;
             _dataContext = dataContext;
             _userHelperRepository = userHelperRepository;
+            _ordersHelper = ordersHelper;
         }
 
         public async Task<IActionResult> Index()
@@ -26,6 +30,7 @@ namespace Shopping.Web.Controllers
             List<Product> products = await _dataContext.Products
             .Include(p => p.ProductImages)
             .Include(p => p.ProductCategories)
+            .Where(p => p.Stock > 0)
             .OrderBy(p => p.Description)
             .ToListAsync();
             HomeViewModel model = new() { Products = products };
@@ -179,6 +184,170 @@ namespace Shopping.Web.Controllers
             _dataContext.TemporalSales.Add(temporalSale);
             await _dataContext.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        [Authorize]
+        public async Task<IActionResult> ShowCart()
+        {
+            User user = await _userHelperRepository.GetUserAsync(User.Identity.Name);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            List<TemporalSale>? temporalSales = await _dataContext.TemporalSales
+            .Include(ts => ts.Product)
+            .ThenInclude(p => p.ProductImages)
+            .Where(ts => ts.User.Id == user.Id)
+            .ToListAsync();
+            ShowCartViewModel model = new()
+            {
+                User = user,
+                TemporalSales = temporalSales,
+            };
+            return View(model);
+        }
+
+        public async Task<IActionResult> DecreaseQuantity(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            TemporalSale temporalSale = await _dataContext.TemporalSales.FindAsync(id);
+            if (temporalSale == null)
+            {
+                return NotFound();
+            }
+            if (temporalSale.Quantity > 1)
+            {
+                temporalSale.Quantity--;
+                _dataContext.TemporalSales.Update(temporalSale);
+                await _dataContext.SaveChangesAsync();
+            }
+            return RedirectToAction(nameof(ShowCart));
+        }
+
+        public async Task<IActionResult> IncreaseQuantity(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            TemporalSale temporalSale = await _dataContext.TemporalSales.FindAsync(id);
+            if (temporalSale == null)
+            {
+                return NotFound();
+            }
+
+            temporalSale.Quantity++;
+            _dataContext.TemporalSales.Update(temporalSale);
+            await _dataContext.SaveChangesAsync();
+
+            return RedirectToAction(nameof(ShowCart));
+        }
+
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            TemporalSale temporalSale = await _dataContext.TemporalSales.FindAsync(id);
+            if (temporalSale == null)
+            {
+                return NotFound();
+            }
+
+            _dataContext.TemporalSales.Remove(temporalSale);
+            await _dataContext.SaveChangesAsync();
+            return RedirectToAction(nameof(ShowCart));
+        }
+
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            TemporalSale temporalSale = await _dataContext.TemporalSales.FindAsync(id);
+            if (temporalSale == null)
+            {
+                return NotFound();
+            }
+
+            EditTemporalSaleViewModel model = new()
+            {
+                Id = temporalSale.Id,
+                Quantity = temporalSale.Quantity,
+                Remarks = temporalSale.Remarks,
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, EditTemporalSaleViewModel model)
+        {
+            if (id != model.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    TemporalSale temporalSale = await _dataContext.TemporalSales.FindAsync(id);
+                    temporalSale.Quantity = model.Quantity;
+                    temporalSale.Remarks = model.Remarks;
+                    _dataContext.Update(temporalSale);
+                    await _dataContext.SaveChangesAsync();
+                }
+                catch (Exception exception)
+                {
+                    ModelState.AddModelError(string.Empty, exception.Message);
+                    return View(model);
+                }
+
+                return RedirectToAction(nameof(ShowCart));
+            }
+
+            return View(model);
+        }
+
+        [Authorize]
+        public IActionResult OrderSuccess()
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ShowCart(ShowCartViewModel model)
+        {
+            User user = await _userHelperRepository.GetUserAsync(User.Identity.Name);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            model.User = user;
+            model.TemporalSales = await _dataContext.TemporalSales
+            .Include(ts => ts.Product)
+            .ThenInclude(p => p.ProductImages)
+            .Where(ts => ts.User.Id == user.Id)
+            .ToListAsync();
+            Response response = await _ordersHelper.ProcessOrderAsync(model);
+            if (response.IsSuccess)
+            {
+                return RedirectToAction(nameof(OrderSuccess));
+            }
+            ModelState.AddModelError(string.Empty, response.Message);
+            return View(model);
         }
 
 

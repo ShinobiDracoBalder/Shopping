@@ -38,5 +38,8 @@ namespace Shopping.Web.Data.Entities
         public string PictureFullPath => ProductImages == null || ProductImages.Count == 0
            ? $"https://zulushooping.azurewebsites.net/images/noimage.png"
            : ProductImages.FirstOrDefault().PictureFullPath;
+
+        public ICollection<SaleDetail> SaleDetails { get; set; }
+
     }
 }
