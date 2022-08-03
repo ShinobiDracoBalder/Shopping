@@ -116,7 +116,8 @@ namespace Shopping.Web.Controllers
                 User user = await _userHelperRepository.AddUserAsync(model);
                 if (user == null)
                 {
-                    ModelState.AddModelError(string.Empty, "Este correo ya está siendo usado.");
+                    _flashMessage.Danger("Este correo ya está siendo usado.");
+                    //ModelState.AddModelError(string.Empty, "Este correo ya está siendo usado.");
                     model.Countries = await _combosHelper.GetComboCountriesAsync();
                     model.States = await _combosHelper.GetComboStatesAsync(model.CountryId);
                     model.Cities = await _combosHelper.GetComboCitiesAsync(model.StateId);
@@ -295,7 +296,7 @@ namespace Shopping.Web.Controllers
                 User user = await _userHelperRepository.GetUserAsync(User.Identity.Name);
                 if (user != null)
                 {
-                    IdentityResult? result = await _userHelperRepository.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+                    IdentityResult result = await _userHelperRepository.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
                     if (result.Succeeded)
                     {
                         return RedirectToAction("ChangeUser");
