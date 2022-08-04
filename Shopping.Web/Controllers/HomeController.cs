@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Shooping.Common.Objects;
 using Shooping.Common.Responses;
 using Shopping.Web.Data;
 using Shopping.Web.Data.Entities;
@@ -25,21 +26,74 @@ namespace Shopping.Web.Controllers
             _ordersHelper = ordersHelper;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? pageNumber)
         {
-            List<Product> products = await _dataContext.Products
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "NameDesc" : "";
+            ViewData["PriceSortParm"] = sortOrder == "Price" ? "PriceDesc" : "Price";
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            ViewData["CurrentFilter"] = searchString;
+
+            //List<Product> products = await _dataContext.Products
+            //.Include(p => p.ProductImages)
+            //.Include(p => p.ProductCategories)
+            //.Where(p => p.Stock > 0)
+            //.OrderBy(p => p.Description)
+            //.ToListAsync();
+
+            IQueryable<Product> query = _dataContext.Products
             .Include(p => p.ProductImages)
             .Include(p => p.ProductCategories)
-            .Where(p => p.Stock > 0)
-            .OrderBy(p => p.Description)
-            .ToListAsync();
-            HomeViewModel model = new() { Products = products };
+            .ThenInclude(pc => pc.Category);
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                query = query.Where(p => (p.Name.ToLower().Contains(searchString.ToLower()) ||
+                p.ProductCategories.Any(pc => pc.Category.Name.ToLower().Contains(searchString.ToLower())))
+                &&
+                p.Stock > 0);
+            }
+            else
+            {
+                query = query.Where(p => p.Stock > 0);
+            }
+            switch (sortOrder)
+            {
+                case "NameDesc":
+                    query = query.OrderByDescending(p => p.Name);
+                    break;
+                case "Price":
+                    query = query.OrderBy(p => p.Price);
+                    break;
+                case "PriceDesc":
+                    query = query.OrderByDescending(p => p.Price);
+                    break;
+                default:
+                    query = query.OrderBy(p => p.Name);
+                    break;
+            }
+            int pageSize = 8;
+            //HomeViewModel model = new() { Products = products };
+
+            HomeViewModel model = new()
+            {
+                Products = await PaginatedList<Product>.CreateAsync(query, pageNumber ?? 1, pageSize),
+                Categories = await _dataContext.Categories.ToListAsync(),
+            };
+
+
             User user = await _userHelperRepository.GetUserAsync(User.Identity.Name);
             if (user != null)
             {
                 model.Quantity = await _dataContext.TemporalSales
-            .Where(ts => ts.User.Id == user.Id)
-            .SumAsync(ts => ts.Quantity);
+                .Where(ts => ts.User.Id == user.Id)
+                .SumAsync(ts => ts.Quantity);
             }
 
             return View(model);

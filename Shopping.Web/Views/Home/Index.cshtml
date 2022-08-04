@@ -1,6 +1,6 @@
 ﻿@model Shopping.Web.Models.HomeViewModel
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Shopping";
 }
 <style type="text/css">
     .card {
@@ -14,17 +14,120 @@
         margin: 5px;
     }
 </style>
-<div class="text-center">
+@*<div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    Tutorial 68  C# desde cero  Parte 00:34:01 019
+    Tutorial 68  C# desde cero  Parte 00:00:00 020
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
-@*<div class="mb-2">
+</div>*@
+
+
+<h1>Shopping</h1>
+<h3>Categorías</h3>
+
+<div class="mb-2">
     @foreach (var item in Model.Categories)
     {
         <span> <a href="@Url.Action("Index", "Home", new { searchString = item.Name})" > @item.Name&nbsp;</a></span>
     }
-</div>*@
+</div>
+<hr/>
+
+<div class="mb-2">
+    <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]">Ordenar por Nombre</a>&nbsp;&nbsp;
+    <a asp-action="Index" asp-route-sortOrder="@ViewData["PriceSortParm"]">Ordenar por Precio</a>
+</div>
+
+<form asp-action="Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Buscar por nombre o categoría: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
+            <input type="submit" value="Buscar" class="btn btn-warning" />
+            <a asp-action="Index" class="btn btn-success">Ver Todos los Productos</a>
+        </p>
+    </div>
+</form>
+
+@if(Model.Quantity > 0)
+{
+    <a asp-action="ShowCart" class="btn btn-outline-primary">Ver Carro de Compras (@Model.Quantity)</a>
+}
+
+<div class="row row-cols-1 row-cols-md-4 g-4 mt-1">
+    @if (Model.Products.Count() > 0)
+    {
+        @foreach (var item in Model.Products)
+        {
+            <div class="col">
+                <div class="card h-100">
+                    <div class="text-center zoom">
+                        <img src="@item.PictureFullPath" style="height:150px; max-width:200px;" class="text-center" alt=@item.Name />
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title text-navy"> @item.Name</h5>
+                        <p class="card-text smfnt">@item.Description</p>
+                        <h5 class="text-muted">@Html.DisplayFor(modelItem => item.Price)</h5>
+                    </div>
+                    <div class="card-footer text-center">
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-secondary">Details</a>
+                        <a asp-action="Add" asp-route-id="@item.Id" class="btn btn-sm btn-primary">Add to Cart</a>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <h3>No hay productos con su criterio de búsqueda</h3>
+    }
+</div>
+
+@{
+    var prevDisabled = !Model.Products.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.Products.HasNextPage ? "disabled" : "";
+}
+
+<div class="mt-5">
+    <a asp-action="Index"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-route-pageNumber="@(Model.Products.PageIndex - 1)"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="btn btn-warning @prevDisabled">
+        Anterior
+    </a>
+    <a asp-action="Index"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-route-pageNumber="@(Model.Products.PageIndex + 1)"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="btn btn-success @nextDisabled">
+        Siguiente
+    </a>
+</div>
+
+
+@*<h1>Shopping</h1>
+<h3>Categorías</h3>
+
+<div class="mb-2">
+    @foreach (var item in Model.Categories)
+    {
+        <span> <a href="@Url.Action("Index", "Home", new { searchString = item.Name})" > @item.Name&nbsp;</a></span>
+    }
+</div>
+<form asp-action="Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Buscar por nombre o categoría: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
+            <input type="submit" value="Buscar" class="btn btn-warning" />
+            <a asp-action="Index" class="btn btn-success">Ver Todos los Productos</a>
+        </p>
+    </div>
+</form>
+
+<hr/>
+<div class="mb-2">
+<a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]">Ordenar por Nombre</a>&nbsp;&nbsp;
+<a asp-action="Index" asp-route-sortOrder="@ViewData["PriceSortParm"]">Ordenar por Precio</a>
+</div>
 @if(Model.Quantity > 0)
 {
   <a asp-action="ShowCart" class="btn btn-outline-primary">Ver Carro de Compras (@Model.Quantity)</a>
@@ -60,7 +163,7 @@
         <h3>No hay productos con su criterio de búsqueda</h3>
     }
 </div>
-@*@foreach (var item in Model.Products)
+@foreach (var item in Model.Products)
 {
     <div class="row">
         @if (item.Product1 != null)

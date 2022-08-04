@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Shooping.Common.Enums;
 using Shopping.Web.Data;
 using Shopping.Web.Interfaces;
 
@@ -18,7 +20,14 @@ namespace Shopping.Web.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            return View();
+            ViewBag.UsersCount = _dataContext.Users.Count();
+            ViewBag.ProductsCount = _dataContext.Products.Count();
+            ViewBag.NewOrdersCount = _dataContext.Sales.Where(o => o.OrderStatus == OrderStatus.Nuevo).Count();
+            ViewBag.ConfirmedOrdersCount = _dataContext.Sales.Where(o => o.OrderStatus == OrderStatus.Confirmado).Count();
+
+            return View(await _dataContext.TemporalSales
+                    .Include(u => u.User)
+                    .Include(p => p.Product).ToListAsync());
         }
     }
 }
