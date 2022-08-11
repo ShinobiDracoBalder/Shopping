@@ -270,7 +270,7 @@ namespace Shopping.Web.Data
                     ImageId = imageId,
                 };
 
-                await _userHelperRepository.AddUserAsync(user, "123456");
+                await _userHelperRepository.AddUserAsync(user, "Admin123456*");
                 await _userHelperRepository.AddUserToRoleAsync(user, userType.ToString());
 
                 string token = await _userHelperRepository.GenerateEmailConfirmationTokenAsync(user);

@@ -56,7 +56,8 @@
                         }
                         else
                         {
-                            @Html.DisplayFor(modelItem => item.Remarks);
+                             @Html.Raw(item.Remarks);
+                            //@Html.DisplayFor(modelItem => item.Remarks);
                         }
                     }
                 }

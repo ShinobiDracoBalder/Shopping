@@ -51,7 +51,8 @@
                                     @Html.DisplayFor(modelItem => item.User.FullName)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Remarks)
+                                      @Html.Raw(item.Remarks);
+                                      @*@Html.DisplayFor(modelItem => item.Remarks)*@
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.OrderStatus)
