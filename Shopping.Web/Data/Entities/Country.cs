@@ -11,7 +11,11 @@ namespace Shopping.Web.Data.Entities
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public string Name { get; set; }
         public ICollection<State> States { get; set; }
-        [Display(Name = "Estados / Departamentos")]
+        [Display(Name = "Departamentos/Estados")]
         public int StatesNumber => States == null ? 0 : States.Count;
+
+        [Display(Name = "Ciudades")]
+        public int CitiesNumber => States == null ? 0 : States.Sum(s => s.CitiesNumber);
+
     }
 }
