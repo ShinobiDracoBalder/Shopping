@@ -89,10 +89,11 @@
                                     @Html.DisplayFor(modelItem => item.Product.Name)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Remarks)
+                                    @Html.Raw(item.Remarks)
+                                    @*@Html.DisplayFor(modelItem => item.Remarks)*@
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Product.Price)
+                                   @Html.DisplayFor(modelItem => item.Product.Price)
                                 </td>
                                 <td>
                                     <a asp-action="DecreaseQuantity" asp-route-id="@item.Id" class="btn btn-secondary">-</a>
