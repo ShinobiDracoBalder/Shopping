@@ -8,8 +8,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Shopping.Web.Data;
 using Shopping.Web.Data.Entities;
+using Shopping.Web.Helpers;
 using Shopping.Web.Interfaces;
 using Shopping.Web.Models;
+using Vereyon.Web;
+using static Shopping.Web.Helpers.ModalHelper;
 
 namespace Shopping.Web.Controllers
 {
@@ -19,13 +22,18 @@ namespace Shopping.Web.Controllers
         private readonly ICountryRepository _countryRepository;
         private readonly ICityRepository _cityRepository;
         private readonly IStateRepository _stateRepository;
+        private readonly IFlashMessage _flashMessage;
+        private readonly DataContext _dataContext;
 
         public CountriesController(ICountryRepository countryRepository,
-            ICityRepository cityRepository, IStateRepository stateRepository)
+            ICityRepository cityRepository
+            , IStateRepository stateRepository, IFlashMessage flashMessage, DataContext dataContext)
         {
             _countryRepository = countryRepository;
             _cityRepository = cityRepository;
             _stateRepository = stateRepository;
+            _flashMessage = flashMessage;
+            _dataContext = dataContext;
         }
 
         // GET: Countries
@@ -83,6 +91,78 @@ namespace Shopping.Web.Controllers
 
             return View(city);
         }
+
+        [NoDirectAccess]
+        public async Task<IActionResult> AddOrEdit(int id = 0)
+        {
+            if (id == 0)
+            {
+                return View(new Country());
+            }
+            else
+            {
+                Country country = await _countryRepository.GetOnlyCountryAsync(id);
+                if (country == null)
+                {
+                    return NotFound();
+                }
+
+                return View(country);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddOrEdit(int id, Country country)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    if (id == 0) //Insert
+                    {
+                       await _countryRepository.AddDataAsync(country);
+                       
+                        _flashMessage.Info("Registro creado.");
+                    }
+                    else //Update
+                    {
+                      await  _countryRepository.UpdateDataAsync(country);
+                       
+                        _flashMessage.Info("Registro actualizado.");
+                    }
+                    return Json(new
+                    {
+                        isValid = true,
+                        html = ModalHelper.RenderRazorViewToString(
+                            this,
+                            "_ViewAllCountries",
+                            _dataContext.Countries
+                                .Include(c => c.States)
+                                .ThenInclude(s => s.Cities)
+                                .ToList())
+                    });
+                }
+                catch (DbUpdateException dbUpdateException)
+                {
+                    if (dbUpdateException.InnerException.Message.Contains("duplicate"))
+                    {
+                        _flashMessage.Danger("Ya existe un país con el mismo nombre.");
+                    }
+                    else
+                    {
+                        _flashMessage.Danger(dbUpdateException.InnerException.Message);
+                    }
+                }
+                catch (Exception exception)
+                {
+                    _flashMessage.Danger(exception.Message);
+                }
+            }
+
+            return Json(new { isValid = false, html = ModalHelper.RenderRazorViewToString(this, "AddOrEdit", country) });
+        }
+
 
         // GET: Countries/Create
         public IActionResult Create()
@@ -438,8 +518,8 @@ namespace Shopping.Web.Controllers
             {
                 return NotFound();
             }
-
-            return View(country);
+            await _countryRepository.DeleteDataAsync(country);
+            return RedirectToAction(nameof(Index));
         }
 
         // POST: Countries/Delete/5

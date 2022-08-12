@@ -27,6 +27,7 @@ namespace Shopping.Web.Data
             await CheckCountriesAsync();
             await CheckRolesAsync();
             await CheckUserAsync("1010", "Juan", "Zuluaga", "zulu@yopmail.com", "322 311 4620", "Calle Luna Calle Sol", "JuanZuluaga.jpeg", UserType.Admin);
+            await CheckUserAsync("1010", "Victor", "Miranda", "victor.miranda@yopmail.com", "322 311 4620", "Calle Luna Calle Sol", "victormiranda.jpg", UserType.Admin);
             await CheckUserAsync("0001", "Draco", "Master", "miles58y_r554v@hxsni.com", "000 000 000", " Street Fin del Mundo", "KakashiNaruto.jpg", UserType.Admin);
             await CheckUserAsync("2020", "Ledys", "Bedoya", "ledys@yopmail.com", "322 311 4620", "Sun Street", "LedysBedoya.jpeg", UserType.User);
             await CheckUserAsync("3030", "Brad", "Pitt", "brad@yopmail.com", "322 311 4620", "Calle Luna Calle Sol", "Brad.jpg", UserType.User);
