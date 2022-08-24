@@ -12,6 +12,7 @@ namespace Shopping.Web.Models
         public string Name { get; set; }
 
         [Display(Name = "Descripción")]
+        [DataType(DataType.MultilineText)]
         [MaxLength(500, ErrorMessage = "El campo {0} debe tener máximo {1} caractéres.")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public string Description { get; set; }

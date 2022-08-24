@@ -57,7 +57,7 @@ namespace Shopping.Web.Controllers
                 string path = string.Empty;
                 if (model.ImageFile != null)
                 {
-                    imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "products");
+                    //imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "products");
                     path = await _imageHelper.UploadImageAsync(model.ImageFile, "products");
                 }
 
@@ -77,7 +77,7 @@ namespace Shopping.Web.Controllers
                     }
                 };
 
-                if (imageId != Guid.Empty)
+                if (imageId != Guid.Empty || !string.IsNullOrEmpty(path))
                 {
                     product.ProductImages = new List<ProductImage>()
                     {
@@ -236,13 +236,14 @@ namespace Shopping.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                Guid imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "products");
+                //Guid imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "products");
                 string ImagePath = await _imageHelper.UploadImageAsync(model.ImageFile, "products");
                 Product product = await _dataContext.Products.FindAsync(model.ProductId);
                 ProductImage productImage = new()
                 {
                     Product = product,
-                    ImageId = imageId,
+                    //ImageId = imageId,
+                    ImageId = Guid.NewGuid(),
                     ImagePath = ImagePath
                 };
 
