@@ -56,7 +56,7 @@ builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICityRepository, CityRepository>();
 builder.Services.AddScoped<IStateRepository, StateRepository>();
 builder.Services.AddScoped<IImageHelper, ImageHelper>();
-builder.Services.AddScoped<IBlobHelper, BlobHelper>();
+//builder.Services.AddScoped<IBlobHelper, BlobHelper>();
 builder.Services.AddScoped<IMailHelper, MailHelper>();
 builder.Services.AddScoped<IOrdersHelper, OrdersHelper>();
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();

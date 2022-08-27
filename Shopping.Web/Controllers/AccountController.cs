@@ -20,18 +20,20 @@ namespace Shopping.Web.Controllers
         private readonly ICombosHelper _combosHelper;
         private readonly IImageHelper _imageHelper;
         private readonly IFlashMessage _flashMessage;
-        private readonly IBlobHelper _blobHelper;
+       // private readonly IBlobHelper _blobHelper;
         private readonly IMailHelper _mailHelper;
 
-        public AccountController(DataContext dataContext, IUserHelperRepository userHelperRepository ,ICombosHelper combosHelper,
-            IImageHelper imageHelper, IFlashMessage flashMessage, IBlobHelper blobHelper, IMailHelper mailHelper)
+        //public AccountController(DataContext dataContext, IUserHelperRepository userHelperRepository ,ICombosHelper combosHelper,
+        //    IImageHelper imageHelper, IFlashMessage flashMessage, IBlobHelper blobHelper, IMailHelper mailHelper)
+        public AccountController(DataContext dataContext, IUserHelperRepository userHelperRepository, ICombosHelper combosHelper,
+            IImageHelper imageHelper, IFlashMessage flashMessage, IMailHelper mailHelper)
         {
             _dataContext = dataContext;
             _userHelperRepository = userHelperRepository;
             _combosHelper = combosHelper;
             _imageHelper = imageHelper;
             _flashMessage = flashMessage;
-            _blobHelper = blobHelper;
+           // _blobHelper = blobHelper;
             _mailHelper = mailHelper;
         }
 
@@ -107,7 +109,7 @@ namespace Shopping.Web.Controllers
                 string path = string.Empty;
                 if (model.ImageFile != null)
                 {
-                    imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "users");
+                    //imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "users");
                     path = await _imageHelper.UploadImageAsync(model.ImageFile, "users");
                 }
 
@@ -252,7 +254,7 @@ namespace Shopping.Web.Controllers
                 string path = model.PicturePath;
                 if (model.ImageFile != null)
                 {
-                    imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "users");
+                   // imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "users");
                     path = await _imageHelper.UploadImageAsync(model.ImageFile, "users");
                 }
 

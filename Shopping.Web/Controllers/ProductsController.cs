@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Shooping.Common.Utilities;
 using Shopping.Web.Data;
 using Shopping.Web.Data.Entities;
 using Shopping.Web.Helpers;
@@ -15,18 +17,22 @@ namespace Shopping.Web.Controllers
     {
         private readonly DataContext _dataContext;
         private readonly ICombosHelper _combosHelper;
-        private readonly IBlobHelper _blobHelper;
+        //private readonly IBlobHelper _blobHelper;
         private readonly IFlashMessage _flashMessage;
         private readonly IImageHelper _imageHelper;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ProductsController(DataContext dataContext, ICombosHelper combosHelper,
-            IBlobHelper blobHelper, IFlashMessage flashMessage, IImageHelper imageHelper)
+        //public ProductsController(DataContext dataContext, ICombosHelper combosHelper,
+        //    IBlobHelper blobHelper, IFlashMessage flashMessage, IImageHelper imageHelper, IWebHostEnvironment webHostEnvironment)
+        public ProductsController(DataContext dataContext, ICombosHelper combosHelper
+           , IFlashMessage flashMessage, IImageHelper imageHelper, IWebHostEnvironment webHostEnvironment)
         {
             _dataContext = dataContext;
             _combosHelper = combosHelper;
-            _blobHelper = blobHelper;
+            //_blobHelper = blobHelper;
             _flashMessage = flashMessage;
             _imageHelper = imageHelper;
+            _webHostEnvironment = webHostEnvironment;
         }
         public async Task<IActionResult> Index()
         {
@@ -285,10 +291,20 @@ namespace Shopping.Web.Controllers
             {
                 return NotFound();
             }
-
-            await _blobHelper.DeleteBlobAsync(productImage.ImageId, "products");
+            
+            //await _blobHelper.DeleteBlobAsync(productImage.ImageId, "products");
             _dataContext.ProductImages.Remove(productImage);
             await _dataContext.SaveChangesAsync();
+            // Eliminar la imagen
+            string upload = _webHostEnvironment.WebRootPath + WC.ImagenRuta;
+            // borrar la imagen anterior
+            var anteriorFile = Path.Combine(upload, productImage.ImagePath);
+            if (System.IO.File.Exists(anteriorFile))
+            {
+                System.IO.File.Delete(anteriorFile);
+            }
+            // fin Borrar imagen anterior
+
             _flashMessage.Info("Registro borrado.");
             return RedirectToAction(nameof(Details), new { id = productImage.Product.Id });
         }
@@ -409,11 +425,22 @@ namespace Shopping.Web.Controllers
 
             foreach (ProductImage productImage in product.ProductImages)
             {
-                await _blobHelper.DeleteBlobAsync(productImage.ImageId, "products");
+               // await _blobHelper.DeleteBlobAsync(productImage.ImageId, "products");
+                
+                // Eliminar la imagen
+                string upload = _webHostEnvironment.WebRootPath + WC.ImagenRuta;
+                // borrar la imagen anterior
+                var anteriorFile = Path.Combine(upload, productImage.ImagePath);
+                if (System.IO.File.Exists(anteriorFile))
+                {
+                    System.IO.File.Delete(anteriorFile);
+                }
             }
 
             _dataContext.Products.Remove(product);
             await _dataContext.SaveChangesAsync();
+            
+            // fin Borrar imagen anterior
             _flashMessage.Info("Registro borrado.");
             return RedirectToAction(nameof(Index));
         }

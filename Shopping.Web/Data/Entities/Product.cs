@@ -32,12 +32,12 @@ namespace Shopping.Web.Data.Entities
 
         [Display(Name = "Foto")]
         public string ImageFullPath => ProductImages == null || ProductImages.Count == 0
-           ? $"https://zulushooping.azurewebsites.net/images/noimage.png"
+           ? $"http://demoshooping.comtecom.com.mx/images/noimage.png"
            : ProductImages.FirstOrDefault().ImageFullPath;
         [Display(Name = "Foto")]
         public string PictureFullPath => ProductImages == null || ProductImages.Count == 0
-           ? $"https://zulushooping.azurewebsites.net/images/noimage.png"
-           : ProductImages.FirstOrDefault().PictureFullPath;
+           ? $"http://demoshooping.comtecom.com.mx/images/noimage.png"
+           : string.Format("http://demoshooping.comtecom.com.mx/{0}", ProductImages.FirstOrDefault().ImagePath.Substring(1));
 
         public ICollection<SaleDetail> SaleDetails { get; set; }
 

@@ -38,17 +38,20 @@ namespace Shopping.Web.Data.Entities
 
         [Display(Name = "Foto")]
         public string ImageFullPath => ImageId == Guid.Empty
-            ? $"https://localhost:7144/images/noimage.png"
-            : $"https://shoppingzulu.blob.core.windows.net/users/{ImageId}";
+            ? $"http://demoshooping.comtecom.com.mx/images/noimage.png"
+            : $"http://demoshooping.comtecom.com.mx/users/{ImageId}";
 
         [Display(Name = "Picture")]
         //public string PictureFullPath => PicturePath == string.Empty
         //   ? $"https://localhost:7144/images/noimage.png"
         //   : $"https://localhost:7144/users/{PicturePath}";
 
+        //public string PictureFullPath => PicturePath == string.Empty
+        //  ? $"http://demoshooping.comtecom.com.mx/images/noimage.png"
+        //  : string.Format("http://demoshooping.comtecom.com.mx/{0}", PicturePath.Substring(1));
         public string PictureFullPath => PicturePath == string.Empty
-          ? $"https://localhost:7144/images/noimage.png"
-          : string.Format("https://localhost:7144/{0}", PicturePath.Substring(1));
+           ? $"http://demoshooping.comtecom.com.mx/images/noimage.png"
+           : string.Format("http://demoshooping.comtecom.com.mx/{0}", PicturePath.Substring(1));
 
         public ICollection<Sale> Sales { get; set; }
 

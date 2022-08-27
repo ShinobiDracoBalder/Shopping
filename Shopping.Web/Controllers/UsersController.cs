@@ -17,18 +17,21 @@ namespace Shopping.Web.Controllers
         private readonly IUserHelperRepository _userHelperRepository;
         private readonly ICombosHelper _combosHelper;
         private readonly DataContext _dataContext;
-        private readonly IBlobHelper _blobHelper;
+        //private readonly IBlobHelper _blobHelper;
         private readonly IMailHelper _mailHelper;
         private readonly IImageHelper _imageHelper;
 
+        //public UsersController(IUserHelperRepository userHelperRepository
+        //    , ICombosHelper combosHelper,DataContext dataContext, IBlobHelper blobHelper
+        //    , IMailHelper mailHelper,IImageHelper imageHelper)
         public UsersController(IUserHelperRepository userHelperRepository
-            , ICombosHelper combosHelper,DataContext dataContext, IBlobHelper blobHelper
-            , IMailHelper mailHelper,IImageHelper imageHelper)
+           , ICombosHelper combosHelper, DataContext dataContext
+           , IMailHelper mailHelper, IImageHelper imageHelper)
         {
             _userHelperRepository = userHelperRepository;
             _combosHelper = combosHelper;
             _dataContext = dataContext;
-            _blobHelper = blobHelper;
+            //_blobHelper = blobHelper;
             _mailHelper = mailHelper;
             _imageHelper = imageHelper;
         }
@@ -60,7 +63,7 @@ namespace Shopping.Web.Controllers
 
                 if (model.ImageFile != null)
                 {
-                    imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "users");
+                   // imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "users");
                     path = await _imageHelper.UploadImageAsync(model.ImageFile, "users");
                 }
 

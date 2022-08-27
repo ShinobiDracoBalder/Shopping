@@ -11,14 +11,15 @@ namespace Shopping.Web.Data
         private readonly DataContext _dataContext;
         private readonly IUserHelperRepository _userHelperRepository;
         private readonly IImageHelper _imageHelper;
-        private readonly IBlobHelper _blobHelper;
+        //private readonly IBlobHelper _blobHelper;
 
-        public SeedDb(DataContext dataContext, IUserHelperRepository userHelperRepository, IImageHelper imageHelper, IBlobHelper blobHelper)
+        //public SeedDb(DataContext dataContext, IUserHelperRepository userHelperRepository, IImageHelper imageHelper, IBlobHelper blobHelper)
+        public SeedDb(DataContext dataContext, IUserHelperRepository userHelperRepository, IImageHelper imageHelper)
         {
             _dataContext = dataContext;
             _userHelperRepository = userHelperRepository;
             _imageHelper = imageHelper;
-            _blobHelper = blobHelper;
+            //_blobHelper = blobHelper;
         }
         public async Task SeedAsync()
         {
@@ -233,7 +234,7 @@ namespace Shopping.Web.Data
 
             foreach (string image in images)
             {
-                Guid imageId = await _blobHelper.UploadBlobAsync($"{Environment.CurrentDirectory}\\wwwroot\\images\\products\\{image}", "products");
+                Guid imageId = Guid.NewGuid();//await _blobHelper.UploadBlobAsync($"{Environment.CurrentDirectory}\\wwwroot\\images\\products\\{image}", "products");
                 
                 prodcut.ProductImages.Add(new ProductImage { ImageId = imageId, ImagePath = $"~images/products/{image}" });
                 
@@ -255,7 +256,7 @@ namespace Shopping.Web.Data
             if (user == null)
             {
                 string imagesId = $"~images/users/{image}";
-                Guid imageId = await _blobHelper.UploadBlobAsync($"{Environment.CurrentDirectory}\\wwwroot\\images\\users\\{image}", "users");
+                Guid imageId = Guid.NewGuid();//await _blobHelper.UploadBlobAsync($"{Environment.CurrentDirectory}\\wwwroot\\images\\users\\{image}", "users");
                 user = new User
                 {
                     FirstName = firstName,

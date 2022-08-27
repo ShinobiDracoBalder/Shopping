@@ -18,8 +18,8 @@ namespace Shopping.Web.Data.Entities
 
         [Display(Name = "Picture")]
         public string PictureFullPath => ImagePath == string.Empty
-           ? $"https://localhost:7144/images/noimage.png"
-           : string.Format("https://localhost:7144/{0}", ImagePath.Substring(1));
+           ? $"http://demoshooping.comtecom.com.mx/images/noimage.png"
+           : string.Format("http://demoshooping.comtecom.com.mx/{0}", ImagePath.Substring(1));
 
     }
 }

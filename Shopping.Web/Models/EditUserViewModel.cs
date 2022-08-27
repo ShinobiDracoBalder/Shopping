@@ -50,8 +50,8 @@ namespace Shopping.Web.Models
 
         [Display(Name = "Picture")]
         public string PictureFullPath => PicturePath == string.Empty
-          ? $"https://localhost:7144/images/noimage.png"
-          : string.Format("https://localhost:7144/{0}", PicturePath.Substring(1));
+          ? $"http://demoshooping.comtecom.com.mx/images/noimage.png"
+          : string.Format("http://demoshooping.comtecom.com.mx/{0}", PicturePath.Substring(1));
 
 
         [Display(Name = "Image")]
