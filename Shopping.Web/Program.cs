@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Shooping.Common.BrainTree;
 using Shopping.Web.Applications.Interfaces;
 using Shopping.Web.Applications.Repositories;
 using Shopping.Web.Data;
@@ -20,6 +21,8 @@ builder.Services.AddDbContext<DataContext>(o =>
 {
     o.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+builder.Services.Configure<BrainTreeSettings>(builder.Configuration.GetSection("BrainTree"));
+builder.Services.AddSingleton<IBrainTreeGate, BrainTreeGate>();
 
 //TODO: Make strongest password
 builder.Services.AddIdentity<User, IdentityRole>(cfg =>
@@ -83,6 +86,12 @@ void SeedData()
     }
 }
 
+var supportedCultures = new[] { "en-US", "es-MX" };
+var localizationOptions = new RequestLocalizationOptions().SetDefaultCulture(supportedCultures[0])
+    .AddSupportedCultures(supportedCultures)
+    .AddSupportedUICultures(supportedCultures);
+
+app.UseRequestLocalization(localizationOptions);
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

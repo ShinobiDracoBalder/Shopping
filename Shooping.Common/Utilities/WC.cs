@@ -6,5 +6,11 @@ namespace Shooping.Common.Utilities
     {
         public const string ImagenRuta = @"\images\products\";
         public const string ImageRutaPerson = @"\images\users\";
+        public const string EstadoPendiente = "Pendiente";
+        public const string EstadoAprobado = "Aprobado";
+        public const string EstadoEnProceso = "Procesando";
+        public const string EstadoEnviado = "Enviado";
+        public const string EstadoCancelado = "Cancelado";
+        public const string EstadoDevuelto = "Devuelto";
     }
 }

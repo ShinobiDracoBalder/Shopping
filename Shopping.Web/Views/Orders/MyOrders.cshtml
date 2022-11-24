@@ -71,6 +71,21 @@
     </div>
 </div>
 
+@if (ViewBag.TransaccionId != null)
+    {
+        <script type="text/javascript">
+            window.onload = function () {
+            swal("Datos", $`Datos de la transaccion es :{"@ViewBag.TransaccionId} Esta de transaccion  {@ViewBag.EstadoVenta}`, "success");
+            };
+        </script>
+    }else{
+    <script type="text/javascript">
+        window.onload = function () {
+            swal("warning", $`Datos de la transaccion es :{@ViewBag.TransaccionId} Esta de transaccion  {@ViewBag.EstadoVenta}`, "error");
+        };
+    </script>
+    }
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     

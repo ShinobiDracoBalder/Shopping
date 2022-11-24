@@ -1,6 +1,6 @@
 ﻿@model Shopping.Web.Models.HomeViewModel
 @{
-    ViewData["Title"] = "Shopping";
+    ViewData["Title"] = "U A G";
 }
 <style type="text/css">
     .card {
@@ -20,8 +20,11 @@
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>*@
 
+<h1>SYREM</h1>
+<div class="text-center">
+    <img src="~/images/uag-logo.png" class="rounded" alt="UAG" />
+</div>
 
-<h1>Shopping</h1>
 <h3>Categorías</h3>
 
 <div class="mb-2">
@@ -68,8 +71,8 @@
                         <h5 class="text-muted">@Html.DisplayFor(modelItem => item.Price)</h5>
                     </div>
                     <div class="card-footer text-center">
-                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-secondary">Details</a>
-                        <a asp-action="Add" asp-route-id="@item.Id" class="btn btn-sm btn-primary">Add to Cart</a>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-secondary">Detalles</a>
+                        <a asp-action="Add" asp-route-id="@item.Id" class="btn btn-sm btn-primary">Añadir al carrito</a>
                     </div>
                 </div>
             </div>

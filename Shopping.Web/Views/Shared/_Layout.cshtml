@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Shopping</title>
+    <title>@ViewData["Title"] - SYREM</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/lib/datatables/css/jquery.dataTables.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -17,8 +17,9 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-secondary border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand  text-white" asp-area="" asp-controller="Home" asp-action="Index"><i class="fa-solid
-fa-bag-shopping text-white"></i> Shopping </a>
+                <a class="navbar-brand  text-white" asp-area="" asp-controller="Home" asp-action="Index">
+                    @*<i class="fa-solid fa-bag-shopping text-white">*@<img src="~/images/uaglogo.ico" style="height:30px; max-width:50px;" class="text-center" /></i> SYREM
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -83,7 +84,7 @@ fa-bag-shopping text-white"></i> Shopping </a>
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2022 - Shopping - <a asp-area="" asp-controller="Home" asp-action="Privacy">Políticas de Privacidad</a>
+            &copy; 2022 - SYREM - <a asp-area="" asp-controller="Home" asp-action="Privacy">Políticas de Privacidad</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -91,6 +92,9 @@ fa-bag-shopping text-white"></i> Shopping </a>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/lib/datatables/js/jquery.dataTables.min.js"></script>
     <script src="~/lib/font-awesome/js/fontawesome.js"></script>
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
     <!-- Syncfusion ASP.NET Core controls scripts -->
     <script src="https://cdn.syncfusion.com/ej2/20.2.43/dist/ej2.min.js"></script>
      <!-- include summernote css/js -->
